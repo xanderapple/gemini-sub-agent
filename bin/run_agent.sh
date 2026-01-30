@@ -28,6 +28,14 @@ OUTPUT_FILE="task_output.md"
 
 # 1. Prepare Workspace
 mkdir -p "$WORKSPACE_ABS_PATH"
+
+# ONLY delete the prompt if we are NOT using an existing one.
+if [ "$PROMPT_TEXT" != "__USE_EXISTING__" ]; then
+    rm -f "$WORKSPACE_ABS_PATH/$PROMPT_FILE"
+fi
+# Always clean output file to ensure fresh result
+rm -f "$WORKSPACE_ABS_PATH/$OUTPUT_FILE"
+
 cd "$WORKSPACE_ABS_PATH" || exit
 
 # 2. Write the user's prompt to a file (unless told to use existing)
@@ -55,7 +63,7 @@ META_PROMPT="SYSTEM TASK:
 # 4. Run Gemini
 # --yolo: Auto-approve tool calls
 # -m: Specify the model (adjust as needed)
-gemini -m gemini-2.0-flash-exp --yolo "$META_PROMPT"
+gemini -m gemini-3-flash-preview --yolo "$META_PROMPT"
 
 echo "--------------------------------------------------"
 if [ -f "$OUTPUT_FILE" ]; then
